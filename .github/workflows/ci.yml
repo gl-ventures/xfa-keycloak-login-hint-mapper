@@ -6,8 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+# Least privilege by default; the release job opts into write access below.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -32,9 +33,15 @@ jobs:
       - name: Validate POM
         run: mvn -B -ntp validate
 
-      - name: Compile
-        # Compilation must succeed against the provided Keycloak SPIs.
-        run: mvn -B -ntp clean compile
+      - name: Lint & compile
+        # Compile against the provided Keycloak SPIs and lint via the Java
+        # compiler: -Xlint:all surfaces all warnings and failOnWarning turns
+        # them into build failures.
+        run: >
+          mvn -B -ntp clean compile
+          -Dmaven.compiler.showWarnings=true
+          -Dmaven.compiler.failOnWarning=true
+          -Dmaven.compiler.compilerArgument=-Xlint:all
 
   # Build the provider jar and publish a GitHub Release. Only on main.
   build-and-release:
@@ -42,6 +49,9 @@ jobs:
     needs: validate
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # Opt into write access for creating/updating the release.
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
