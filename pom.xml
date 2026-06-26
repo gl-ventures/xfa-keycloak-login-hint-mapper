@@ -7,6 +7,35 @@
   <version>1.0.0</version>
   <packaging>jar</packaging>
 
+  <name>XFA Keycloak login_hint mapper</name>
+  <description>
+    A Keycloak authenticator that forwards the authenticated user's email as the
+    OpenID Connect login_hint when redirecting to an external Identity Provider.
+    Published by XFA (https://xfa.tech) to add XFA device verification as a
+    post-login step in Keycloak.
+  </description>
+  <url>https://github.com/gl-ventures/xfa-keycloak-login-hint-mapper</url>
+  <inceptionYear>2026</inceptionYear>
+
+  <organization>
+    <name>XFA</name>
+    <url>https://xfa.tech</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/gl-ventures/xfa-keycloak-login-hint-mapper</url>
+    <connection>scm:git:https://github.com/gl-ventures/xfa-keycloak-login-hint-mapper.git</connection>
+    <developerConnection>scm:git:git@github.com:gl-ventures/xfa-keycloak-login-hint-mapper.git</developerConnection>
+  </scm>
+
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
