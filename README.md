@@ -112,6 +112,11 @@ This is an **independent, open-source Keycloak provider**. It is not affiliated
 with, endorsed by, or sponsored by the Keycloak project or Red Hat. "Keycloak" is
 a trademark of Red Hat, Inc. "XFA" is a trademark of XFA.
 
+## Security
+
+To report a security vulnerability, please email **<security@xfa.tech>** rather
+than opening a public issue. See [SECURITY.md](SECURITY.md) for details.
+
 ## License
 
 Licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE) and
