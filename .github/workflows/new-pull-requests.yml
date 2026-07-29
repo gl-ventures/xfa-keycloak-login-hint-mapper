@@ -1,0 +1,46 @@
+name: New pull requests
+
+# Housekeeping applied to every pull request as it is opened.
+#
+# GitHub does not assign a PR to the person who opened it, so without this the
+# assignee field stays empty and board and filter views by assignee silently miss
+# work that is in flight.
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  assign:
+    name: Assign to author
+    # API-only housekeeping: no checkout, no build. ubuntu-slim is ~68% cheaper
+    # per minute than ubuntu-latest and plenty for this.
+    runs-on: ubuntu-slim
+    steps:
+      - name: Assign PR to its author
+        uses: actions/github-script@v9
+        with:
+          script: |
+            // Dependabot/Renovate PRs are authored by an app, which cannot be
+            // assigned; skip rather than failing the job on every bot PR.
+            const login = context.payload.pull_request.user.login;
+            if (context.payload.pull_request.user.type === 'Bot') {
+              core.info(`Skipping bot author: ${login}`);
+              return;
+            }
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                assignees: [login],
+              });
+              core.info(`Assigned #${context.payload.pull_request.number} to ${login}`);
+            } catch (error) {
+              // A non-member author cannot be assigned; that is not a failure.
+              core.warning(`Could not assign to ${login}: ${error.message}`);
+            }
