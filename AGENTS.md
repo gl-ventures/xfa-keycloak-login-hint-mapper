@@ -65,3 +65,5 @@ Precedent and rationale: `gl-ventures/xfa-organizations-service#508`.
 > This does **not** apply to repos where markdown *is* the shipped product
 > (`xfa-docs`, `xfa.tech`, `xfa-guides`). There, skipping the build on a `.md`
 > change would skip building the actual site — the premise is inverted.
+
+<!-- docs-only proof: this PR touches only markdown -->
