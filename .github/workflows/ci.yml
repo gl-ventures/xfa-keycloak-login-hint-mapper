@@ -3,6 +3,12 @@ name: CI
 on:
   push:
     branches: [main]
+    # Docs-only commits need no deploy, and nothing requires a check on a
+    # main push - the required check comes from pull_request. Filtering the
+    # whole workflow here is strictly cheaper than spinning a detect job.
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   pull_request:
     branches: [main]
 
@@ -15,9 +21,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Sets docs_only for the validate gate below. Only pull_request is inspected;
+  # on a push docs_only is empty, which reads as "not docs-only".
+  detect:
+    name: Detect docs-only changes
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      docs_only: ${{ steps.changes.outputs.docs_only }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # needed to diff against the base
+
+      - name: Detect docs-only changes
+        id: changes
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          # The base branch tip; HEAD is the merge commit, so this covers the
+          # whole pull request, not just the latest push.
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          files=$(git diff --name-only "$BASE_SHA" HEAD)
+          echo "Changed files:"; echo "$files"
+          # Anything not *.md and not under docs/ (or an empty diff) runs everything.
+          if [ -n "$files" ] && ! echo "$files" | grep -qvE '(\.md$|^docs/)'; then
+            echo "Docs only; skipping lint and validation."
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Not docs-only; running the full pipeline."
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+          fi
+
   # Linting and basic validation. Runs on every push and pull request.
   validate:
     name: Lint & validate
+    needs: detect
+    # A skipped job reports Success, which is what clears the required check.
+    # !cancelled() so a FAILED detect runs everything rather than skipping into
+    # a false Success.
+    if: ${{ !cancelled() && needs.detect.outputs.docs_only != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
