@@ -43,7 +43,7 @@ and the display name **"IdP Redirector (login_hint)"**.
 
 ## Requirements
 
-- Keycloak **26.x** (built and tested against `26.6.3`)
+- Keycloak **26.x** (built and tested against `26.7.2`)
 - Java 17 and Maven (to build from source)
 
 ## Build
@@ -61,7 +61,7 @@ cp target/login-hint-idp-*.jar /opt/keycloak/providers
 ```
 
 (the jar name carries the `<version>` from `pom.xml`, e.g.
-`login-hint-idp-1.0.0.jar`)
+`login-hint-idp-1.0.1.jar`)
 
 Then rebuild and restart Keycloak so the provider is registered:
 
@@ -94,7 +94,7 @@ runs automatically:
   (`-Xlint:all` with warnings promoted to errors) against the Keycloak SPIs.
 - **On pushes to `main`**: the same validation, then a full build
   (`mvn clean package`) that publishes a GitHub Release tagged with the project
-  version (e.g. `v1.0.0`) with the built `*.jar` attached.
+  version (e.g. `v1.0.1`) with the built `*.jar` attached.
 
 The release tag follows the `<version>` from `pom.xml`. Each push to `main`
 updates the release for the current version; bump the version in `pom.xml` to

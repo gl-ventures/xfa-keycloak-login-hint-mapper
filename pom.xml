@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>tech.xfa</groupId>
   <artifactId>login-hint-idp</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>XFA Keycloak login_hint mapper</name>
@@ -39,7 +39,7 @@
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <keycloak.version>26.6.3</keycloak.version>
+    <keycloak.version>26.7.2</keycloak.version>
   </properties>
 
   <dependencies>
