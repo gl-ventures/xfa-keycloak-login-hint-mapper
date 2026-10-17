@@ -28,6 +28,7 @@ Not on the merge path.
   copy. This repo is public and cannot call a workflow in private devops, so it
   keeps this inline copy of the assign job. No board job: it needs
   `PROJECT_BOARD_TOKEN`, which GitHub does not pass to PRs from forks.
+
 ## How to validate
 
 - `actionlint .github/workflows/new-pull-requests.yml` passes.
