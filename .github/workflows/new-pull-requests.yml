@@ -10,9 +10,9 @@ on:
   pull_request:
     types: [opened]
 
-permissions:
-  pull-requests: write
-  issues: write
+# Nothing workflow-wide: each job asks for exactly the GITHUB_TOKEN scopes it
+# needs, so a job added here later starts with none instead of inheriting write.
+permissions: {}
 
 jobs:
   assign:
@@ -20,6 +20,9 @@ jobs:
     # API-only housekeeping: no checkout, no build. ubuntu-slim is ~68% cheaper
     # per minute than ubuntu-latest and plenty for this.
     runs-on: ubuntu-slim
+    permissions:
+      pull-requests: write
+      issues: write
     steps:
       - name: Assign PR to its author
         uses: actions/github-script@v9
